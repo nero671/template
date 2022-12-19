@@ -1,0 +1,6 @@
+{
+  "app/blocks/**/*.js": "eslint",
+  "app/scripts/**/*.js": "eslint",
+  "app/blocks/**/*.scss": "stylelint",
+  "app/styles/**/*.scss": "stylelint"
+}

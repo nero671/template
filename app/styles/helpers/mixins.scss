@@ -1,0 +1,266 @@
+// Примесь для очистки поток
+@mixin clearfix() {
+  &::after {
+    display: table;
+    clear: both;
+    content: '';
+  }
+}
+
+// Примесь для добавления кроссбраузерного placeholder
+@mixin optional-at-root($sel) {
+  @at-root #{if(not &, $sel, selector-append(&, $sel))} {
+    @content;
+  }
+}
+
+@mixin input-placeholder() {
+  @include optional-at-root('::-webkit-input-placeholder') {
+    @content;
+  }
+
+  @include optional-at-root(':-moz-placeholder') {
+    @content;
+  }
+
+  @include optional-at-root('::-moz-placeholder') {
+    opacity: 1;
+    @content;
+  }
+
+  @include optional-at-root(':-ms-input-placeholder') {
+    opacity: 1;
+    @content;
+  }
+
+  @include optional-at-root('.placeholder') {
+    @content;
+  }
+}
+
+@mixin input-placeholder-focus {
+  @include optional-at-root(":focus::-webkit-input-placeholder") {
+    @content;
+  }
+
+  @include optional-at-root(":focus:-moz-placeholder") {
+    @content;
+  }
+
+  @include optional-at-root(":focus::-moz-placeholder") {
+    @content;
+  }
+
+  @include optional-at-root(":focus:-ms-input-placeholder") {
+    @content;
+  }
+
+  @include optional-at-root(".placeholder:focus") {
+    @content;
+  }
+}
+
+@mixin input-placeholder-hover {
+  @include optional-at-root(":hover::-webkit-input-placeholder") {
+    @content;
+  }
+
+  @include optional-at-root(":hover:-moz-placeholder") {
+    @content;
+  }
+
+  @include optional-at-root(":hover::-moz-placeholder") {
+    @content;
+  }
+
+  @include optional-at-root(":hover:-ms-input-placeholder") {
+    @content;
+  }
+
+  @include optional-at-root(".placeholder:hover") {
+    @content;
+  }
+}
+
+// Примеси для создания медиаразвилок
+@mixin below($width, $orientation: 'width') {
+  @media screen and (max-#{$orientation}: $width - 1) {
+    @content;
+  }
+}
+
+@mixin above($width, $orientation: 'width') {
+  @media screen and (min-#{$orientation}: $width) {
+    @content;
+  }
+}
+
+@mixin between($minWidth, $maxWidth, $orientation: 'width') {
+  @media screen and (min-#{$orientation}: $minWidth) and (max-#{$orientation}: $maxWidth) {
+    @content;
+  }
+}
+
+@mixin sm {
+  @media (min-width: #{$sm}) {
+    @content;
+  }
+}
+
+@mixin md {
+  @media (min-width: #{$md}) {
+    @content;
+  }
+}
+
+@mixin lg {
+  @media (min-width: #{$lg}) {
+    @content;
+  }
+}
+
+@mixin xl {
+  @media (min-width: #{$xl}) {
+    @content;
+  }
+}
+
+// Добавление троеточия в конце строки
+@mixin truncate($truncation-boundary) {
+  max-width: $truncation-boundary;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+// Оптимизация текста при анимации
+@mixin fix-text-size-adjust() {
+  background-image: linear-gradient(transparent, transparent);
+}
+
+// Еще один вариант оптимизации текста при анимации
+@mixin antialiased {
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  -webkit-touch-callout: none;
+  -webkit-user-select: none;
+  user-select: none;
+}
+
+// Попарное добавление отступов
+@mixin margin-x($margin) {
+  margin-right: $margin;
+  margin-left: $margin;
+}
+
+@mixin margin-y($margin) {
+  margin-top: $margin;
+  margin-bottom: $margin;
+}
+
+@mixin padding-x($padding) {
+  padding-right: $padding;
+  padding-left: $padding;
+}
+
+@mixin padding-y($padding) {
+  padding-top: $padding;
+  padding-bottom: $padding;
+}
+
+// Генератор подключения font-face шрифтов
+// @include font-face("candara", "../fonts/candara/regular/candara", normal, normal, eot woff ttf svg)
+
+@function str-replace($string, $search, $replace: "") {
+  $index: str-index($string, $search);
+
+  @if $index {
+    @return str-slice($string, 1, $index - 1) + $replace + str-replace(str-slice($string, $index + str-length($search)), $search, $replace);
+  }
+
+  @return $string;
+}
+
+@mixin font-face($name, $path, $weight: null, $style: null, $exts: eot woff2 woff ttf svg) {
+  $src: null;
+  $extmods: (eot: "?", svg: "#" + str-replace($name, " ", "_"));
+  $formats: (otf: "opentype", ttf: "truetype");
+
+  @each $ext in $exts {
+    $extmod: if(map-has-key($extmods, $ext), $ext + map-get($extmods, $ext), $ext);
+    $format: if(map-has-key($formats, $ext), map-get($formats, $ext), $ext);
+    $src: append($src, url(quote($path + "." + $extmod)) format(quote($format)), comma);
+  }
+
+  @font-face {
+    font-weight: $weight;
+    font-family: quote($name);
+    font-style: $style;
+    src: $src;
+    font-display: swap;
+  }
+}
+
+// Округление rem'ов
+@function pow($number, $exponent) {
+  $value: 1;
+
+  @if $exponent > 0 {
+    @for $i from 1 through $exponent {
+      $value: $value * $number;
+    }
+  }
+
+  @return $value;
+}
+
+@function round-float($number, $n) {
+  $float: pow(10, $n);
+  $value: round($number * $float) / $float;
+
+  @return $value;
+}
+
+@function floor-float($number, $n) {
+  $float: pow(10, $n);
+  $value: floor($number * $float) / $float;
+
+  @return $value;
+}
+
+@function ceil-float($number, $n) {
+  $float: pow(10, $n);
+  $value: ceil($number * $float) / $float;
+
+  @return $value;
+}
+
+// Вычисление padding-top при создании пропорционально тянущегося элемента
+@mixin ratio($x: 1, $y: 1) {
+  $padding: round-float($y / $x * 100%, 2);
+
+  padding-top: $padding;
+}
+
+// Скрываем текс правильно, оставляя его видимым для ридеров
+@mixin hide-text {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  padding: 0;
+  overflow: hidden;
+  border: 0;
+  clip: rect(0 0 0 0);
+}
+
+// Блокировка прокрутки страницы
+@mixin lock-scroll {
+  width: 100% !important;
+  max-width: 100% !important;
+  height: 100% !important;
+  max-height: 100% !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  overflow: hidden !important;
+}

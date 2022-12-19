@@ -1,0 +1,40 @@
+html {
+  height: 100%; // Footer at bottom
+  font-size: 62.5%;
+}
+
+body {
+  display: flex; // Footer at bottom
+  flex-direction: column; // Footer at bottom
+  height: 100%; // Footer at bottom
+  color: #000;
+  font-size: 1.4rem;
+  line-height: 1.6rem;
+  background: #fff;
+}
+
+.header {
+  flex-shrink: 0; // Footer at bottom
+}
+
+.main {
+  position: relative;
+  flex: 1 0 auto; // Footer at bottom
+}
+
+.footer {
+  z-index: 10;
+  flex-shrink: 0; // Footer at bottom
+  margin-top: auto;
+}
+
+img {
+  max-width: 100%;
+  height: auto;
+  vertical-align: top;
+  border: none;
+
+  table & {
+    max-width: none;
+  }
+}

@@ -1,0 +1,30 @@
+{
+  "env": {
+    "browser": true
+  },
+  "parser": "@babel/eslint-parser",
+  "extends": "airbnb-base",
+  "rules": {
+    "consistent-return": "off",
+    "func-names": "off",
+    "no-new": "off",
+    "no-plusplus": "off",
+    "no-console": ["warn", {"allow": ["error", "info", "warn"]}],
+    "prefer-rest-params": "warn",
+    "semi": ["error", "always"],
+    "wrap-iife": "off",
+    "import/no-extraneous-dependencies": ["error", {"devDependencies": ["gulpfile.babel.js", "tasks/**/*"]}],
+    "import/prefer-default-export": "off",
+    "no-undef": "off",
+    "no-unused-vars": "warn",
+    "no-prototype-builtins": "off",
+    "linebreak-style": ["off", "unix"],
+    "arrow-parens": ["error", "always"],
+    "object-curly-newline": ["error", {
+      "ObjectExpression": "always",
+      "ObjectPattern": { "multiline": true },
+      "ImportDeclaration": "never",
+      "ExportDeclaration": { "multiline": false, "minProperties": 3 }
+    }]
+  }
+}
